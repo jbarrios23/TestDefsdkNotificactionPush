@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">TestDefSdKNotificactionPush</string>
+    <string name="notifications_admin_channel_name">tres</string>
+    <string name="notifications_admin_channel_description">cuatro</string>
+    <string name="title">Demostration Messangi SDK</string>
+    <string name="device_info">Device Info</string>
+    <string name="user_device_info">User Device Info</string>
+    <string name="hint">"Type New Tag for this device."</string>
+    <string name="hint_key">Key</string>
+    <string name="hint_value">Value</string>
+</resources>

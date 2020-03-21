@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">SDK</string>
+    <string name="notifications_admin_channel_name">uno</string>
+    <string name="notifications_admin_channel_description">dos</string>
+</resources>
