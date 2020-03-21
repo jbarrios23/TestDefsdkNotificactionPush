@@ -43,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public Messangi messangi;
     public Button device,user,tags,save;
     public TextView imprime;
-
     public MessangiDev messangiDev;
     public MessangiUserDevice messangiUserDevice;
 
