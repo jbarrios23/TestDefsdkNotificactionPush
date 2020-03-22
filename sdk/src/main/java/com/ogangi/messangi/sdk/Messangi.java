@@ -180,7 +180,6 @@ public class Messangi implements LifecycleObserver{
 
         utils.showInfoLog(this,androidId);
 
-
         return androidId;
     }
 
@@ -325,11 +324,9 @@ public class Messangi implements LifecycleObserver{
 //        }
 //    }
 
-
-
     /**
      * Method for create device parameter and create device from FirebaseNotificationService
-     * this method make update when pushTokem is getting by Services
+     * this method make update when pushToken is getting by Services
      *
      */
 

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public ArrayList<String> messangiUserDeviceArrayList;
     public ArrayAdapter<String> messangiUserDeviceArrayAdapter;
     public ProgressBar progressBar;
+    public TextView title;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         setContentView(R.layout.activity_main);
         lista_device=findViewById(R.id.lista_device);
         lista_user=findViewById(R.id.lista_user);
+        title=findViewById(R.id.textView_imprimir);
 
         device=findViewById(R.id.device);
         user=findViewById(R.id.user);
@@ -74,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         messangiUserDeviceArrayList=new ArrayList<>();
         messangiDevArrayAdapter=new ArrayAdapter<>(this,R.layout.item_device,R.id.Texview_value,messangiDevArrayList);
         messangiUserDeviceArrayAdapter=new ArrayAdapter<>(this,R.layout.item_device,R.id.Texview_value,messangiUserDeviceArrayList);
-
+        title.setText(getResources().getString(R.string.title)+"\n"+messangi.getExternalId());
 
         device.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 messangiUserDeviceArrayList.clear();
                 progressBar.setVisibility(View.VISIBLE);
                 messangi.requestDevice(true);
+                Log.e(TAG,CLASS_TAG+": "+messangi.getExternalId());
             }
         });
 
@@ -128,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
             }
         });
-
 
 
     }
