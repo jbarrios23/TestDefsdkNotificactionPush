@@ -1,0 +1,39 @@
+apply plugin: 'com.github.dcendents.android-maven'
+
+group = 'com.android.testdefsdknotificactionpush' // PACKAGE NAME FROM BINTRAY ACCOUNT
+
+install {
+    repositories.mavenInstaller {
+        pom {
+            project {
+                packaging 'aar'
+                groupId 'com.android.testdefsdknotificactionpush' // PACKAGE NAME FROM BINTRAY ACCOUNT
+                artifactId 'sdk' // THE NAME OF YOUR MODULE
+
+                name 'sdk' // YOUR LIBRARY NAME
+                description 'FilePickerHelper is a library to get multi-type files written in Java.' // YOUR LIBRARY DESCRIPTION
+                url 'https://github.com/jbarrios23/TestDefsdkNotificactionPush' // YOUR SITE
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'jbarrios23' //YOUR GITHUB ID
+                        name 'Javier Barrios' //YOUR NAME
+                        email 'jbarrios.javier@gmail.com' //YOUR EMAIL
+                    }
+                }
+                scm {
+                    connection 'https://github.com/jbarrios23/TestDefsdkNotificactionPush.git' // YOUR GIT REPO
+                    developerConnection 'https://github.com/jbarrios23/TestDefsdkNotificactionPush.git' // YOUR GIT REPO
+                    url 'https://github.com/jbarrios23/TestDefsdkNotificactionPush' // YOUR SITE
+
+                }
+            }
+        }
+    }
+}

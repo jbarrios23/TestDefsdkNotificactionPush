@@ -45,7 +45,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public TextView imprime;
     public MessangiDev messangiDev;
     public MessangiUserDevice messangiUserDevice;
-
     public ListView lista_device,lista_user;
 
     public ArrayList<String> messangiDevArrayList;
