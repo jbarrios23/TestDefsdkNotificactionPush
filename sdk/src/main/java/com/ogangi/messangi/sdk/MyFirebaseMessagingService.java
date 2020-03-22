@@ -22,8 +22,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 /**
- * class MyFirebaseMessagingService let handle notification push using FirebaseMessagingService </code>.
- * @see #FirebaseMessagingService
+ * class MyFirebaseMessagingService let handle notification push using FirebaseMessagingService .
+ *
  */
 public class MyFirebaseMessagingService extends FirebaseMessagingService  {
 

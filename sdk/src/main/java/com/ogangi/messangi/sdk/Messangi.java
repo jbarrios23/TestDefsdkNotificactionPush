@@ -1,4 +1,5 @@
 package com.ogangi.messangi.sdk;
+
 import android.Manifest;
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -6,16 +7,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import android.util.Patterns;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
@@ -303,32 +298,32 @@ public class Messangi implements LifecycleObserver{
 //        return phone;
 //    }
 
-    public void requestPermission(@NonNull String permission, int PERMISSION_REQUEST_CODE, Activity activity1){
-        activity=activity1;
-        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)){
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity, "Phone state permission allows us to get phone number. Please allow it for additional functionality.", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
-        ActivityCompat.requestPermissions(activity, new String[]{permission},PERMISSION_REQUEST_CODE);
-    }
+//    public void requestPermission( String permission, int PERMISSION_REQUEST_CODE, Activity activity1){
+//        activity=activity1;
+//        if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)){
+//            activity.runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(activity, "Phone state permission allows us to get phone number. Please allow it for additional functionality.", Toast.LENGTH_LONG).show();
+//                }
+//            });
+//        }
+//        ActivityCompat.requestPermissions(activity, new String[]{permission},PERMISSION_REQUEST_CODE);
+//    }
 
-    public boolean checkPermission(String permission,Context context){
-        //activity=activity1;
-        if (Build.VERSION.SDK_INT >= 23) {
-            int result = ContextCompat.checkSelfPermission(context, permission);
-            if (result == PackageManager.PERMISSION_GRANTED){
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return true;
-        }
-    }
+//    public boolean checkPermission(String permission,Context context){
+//        //activity=activity1;
+//        if (Build.VERSION.SDK_INT >= 23) {
+//            int result = ContextCompat.checkSelfPermission(context, permission);
+//            if (result == PackageManager.PERMISSION_GRANTED){
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        } else {
+//            return true;
+//        }
+//    }
 
 
 
