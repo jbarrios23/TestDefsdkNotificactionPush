@@ -44,7 +44,7 @@ public class MessangiUserDevice implements Serializable {
     public void save(final Context context){
 
         final Messangi messangi=Messangi.getInst(context);
-        final StorageController storageController=Messangi.getInst().storageController;
+        final MessangiStorageController messangiStorageController =Messangi.getInst().messangiStorageController;
         EndPoint endPoint= ApiUtils.getSendMessageFCM(context);
         String deviceId=messangi.messangiDev.getId();
         messangi.utils.showErrorLog(this,deviceId);
@@ -69,7 +69,7 @@ public class MessangiUserDevice implements Serializable {
                                 data, new TypeToken<HashMap<String, String>>() {}.getType()
                         );
                         MessangiUserDevice messangiUserDevice=parseData(retMap);
-                        storageController.saveUserByDevice(messangiUserDevice);
+                        messangiStorageController.saveUserByDevice(messangiUserDevice);
                         sendEventToActivity(messangiUserDevice,context);
 
                     }else{

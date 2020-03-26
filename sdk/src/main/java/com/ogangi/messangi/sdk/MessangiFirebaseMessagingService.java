@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -22,10 +21,10 @@ import com.google.firebase.messaging.RemoteMessage;
 import java.util.Random;
 
 /**
- * class MyFirebaseMessagingService let handle notification push using FirebaseMessagingService .
+ * class MessangiFirebaseMessagingService let handle notification push using FirebaseMessagingService .
  *
  */
-public class MyFirebaseMessagingService extends FirebaseMessagingService  {
+public class MessangiFirebaseMessagingService extends FirebaseMessagingService  {
 
 
     private NotificationManager notificationManager;
@@ -34,7 +33,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService  {
     public String title ;
     public String icon;
     public String nameClass;
-    public StorageController storageController;
+    public MessangiStorageController messangiStorageController;
     public Messangi messangi;
     public Activity activity;
 
@@ -48,7 +47,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService  {
 
         super.onNewToken(s);
         messangi = Messangi.getInst(this);
-        messangi.utils.showDebugLog(this,"New Token "+s);
+        messangi.utils.showErrorLog(this,"New Token "+s);
         sendTokenToBackend(s);
 
 
@@ -65,10 +64,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService  {
     private void sendTokenToBackend(String tokenPush) {
 
 
-        storageController=messangi.storageController;
-        storageController.saveToken(tokenPush);
+        messangiStorageController =messangi.messangiStorageController;
+        messangiStorageController.saveToken(tokenPush);
 
-        if(!storageController.isNotificationManually()&& messangi.messangiDev!=null){
+        if(!messangiStorageController.isNotificationManually()&& messangi.messangiDev!=null){
+            messangi.utils.showErrorLog(this,"save in");
             messangi.messangiDev.setPushToken(tokenPush);
             messangi.messangiDev.save(this);
         }

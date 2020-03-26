@@ -11,14 +11,14 @@ public class ApiUtils {
      */
    public static EndPoint getSendMessageFCM(Context context){
         messangi=Messangi.getInst(context);
-        String url= SdkUtils.getMessangi_host();
-        String token=SdkUtils.getMessangi_token();
+        String url= MessangiSdkUtils.getMessangi_host();
+        String token= MessangiSdkUtils.getMessangi_token();
         return RetrofitClient.getClient(url,token,context).create(EndPoint.class);
    }
 
     public static EndPoint getSendMessageFCMAlt(Context context){
         messangi=Messangi.getInst(context);
-        String url=SdkUtils.getMessangi_host();
+        String url= MessangiSdkUtils.getMessangi_host();
         return RetrofitClient.getClientAlt(url).create(EndPoint.class);
     }
 

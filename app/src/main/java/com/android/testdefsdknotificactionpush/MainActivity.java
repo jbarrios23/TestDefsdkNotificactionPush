@@ -28,7 +28,7 @@ import android.widget.Toast;
 import com.ogangi.messangi.sdk.Messangi;
 import com.ogangi.messangi.sdk.MessangiDev;
 import com.ogangi.messangi.sdk.MessangiUserDevice;
-import com.ogangi.messangi.sdk.SdkUtils;
+import com.ogangi.messangi.sdk.MessangiSdkUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -267,14 +267,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         public void onReceive(Context context, Intent intent) {
 
             Serializable message=intent.getSerializableExtra("message");
-            SdkUtils sdkUtils=new SdkUtils();
+            MessangiSdkUtils messangiSdkUtils =new MessangiSdkUtils();
             if ((message instanceof MessangiDev) && (message!=null)){
                 messangiDevArrayList.clear();
 
                 messangiDev=(MessangiDev) message;
 
 
-                Log.i(TAG,CLASS_TAG+": Device:  "+sdkUtils.getGsonJsonFormat(messangiDev));
+                Log.i(TAG,CLASS_TAG+": Device:  "+ messangiSdkUtils.getGsonJsonFormat(messangiDev));
                 messangiDevArrayList.add("Id: "           +messangiDev.getId());
                 messangiDevArrayList.add("pushToken: "    +messangiDev.getPushToken());
                 messangiDevArrayList.add("UserId: "       +messangiDev.getUserId());
@@ -297,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }else if((message instanceof MessangiUserDevice) && (message!=null)){
                 messangiUserDeviceArrayList.clear();
                 messangiUserDevice=(MessangiUserDevice) message;
-                Log.i(TAG,CLASS_TAG+" User:  "+sdkUtils.getGsonJsonFormat(messangiUserDevice));
+                Log.i(TAG,CLASS_TAG+" User:  "+ messangiSdkUtils.getGsonJsonFormat(messangiUserDevice));
 
 
                 if(messangiUserDevice.getProperties().size()>0){
