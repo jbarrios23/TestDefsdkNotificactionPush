@@ -86,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 progressBar.setVisibility(View.VISIBLE);
                 messangi.requestDevice(true);
                 Log.e(TAG,CLASS_TAG+": "+messangi.getExternalId());
+                messangiDev.requestUserByDevice(getApplicationContext(),true);
             }
         });
 
@@ -274,7 +275,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 messangiDev=(MessangiDev) message;
 
 
-                Log.i(TAG,CLASS_TAG+": Device:  "+ messangiSdkUtils.getGsonJsonFormat(messangiDev));
+                Log.i(TAG,CLASS_TAG+": Device:  "+ messangiDev.getId());
                 messangiDevArrayList.add("Id: "           +messangiDev.getId());
                 messangiDevArrayList.add("pushToken: "    +messangiDev.getPushToken());
                 messangiDevArrayList.add("UserId: "       +messangiDev.getUserId());
@@ -297,16 +298,14 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }else if((message instanceof MessangiUserDevice) && (message!=null)){
                 messangiUserDeviceArrayList.clear();
                 messangiUserDevice=(MessangiUserDevice) message;
-                Log.i(TAG,CLASS_TAG+" User:  "+ messangiSdkUtils.getGsonJsonFormat(messangiUserDevice));
-
+                Log.i(TAG,CLASS_TAG+" User:  "+ messangiUserDevice.getDevices());
 
                 if(messangiUserDevice.getProperties().size()>0){
                     Map<String,String> result=messangiUserDevice.getProperties();
                     for (Map.Entry<String, String> entry : result.entrySet()) {
-
                         messangiUserDeviceArrayList.add(entry.getKey()+": "+entry.getValue());
                     }
-
+                    messangiUserDeviceArrayList.add("devices: "+messangiUserDevice.getDevices());
 
                 }
 

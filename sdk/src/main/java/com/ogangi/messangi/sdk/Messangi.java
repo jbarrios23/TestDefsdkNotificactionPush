@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Log;
 import android.util.Patterns;
 
 import androidx.lifecycle.Lifecycle;
@@ -20,11 +19,7 @@ import androidx.lifecycle.ProcessLifecycleOwner;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -40,14 +35,10 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+
 
 
 /**
@@ -62,7 +53,7 @@ public class Messangi implements LifecycleObserver{
     public Activity activity;
     public int icon;
     private static final int PERMISSION_REQUEST_CODE = 1;
-    static EndPoint endPoint;
+
     public String wantPermission = Manifest.permission.READ_PHONE_STATE;
 
 
@@ -119,17 +110,16 @@ public class Messangi implements LifecycleObserver{
 
         utils.showDebugLog(this,"Foreground");
         //if(messangiStorageController.isRegisterDevice()){
-//            if(messangiStorageController.isRegisterDeviceOneByOne()){
-//
-//            //messangiDev= messangiStorageController.getDevice();
-//            messangiDev= messangiStorageController.getDeviceOneByOne();
-//            messangiDev.checkSdkVersion(context);
-//
-//
-//        }else{
-//            utils.showInfoLog(this,"Device not found!");
-//
-//        }
+            if(messangiStorageController.isRegisterDeviceOneByOne()){
+            //messangiDev= messangiStorageController.getDevice();
+            messangiDev= messangiStorageController.getDeviceOneByOne();
+            messangiDev.checkSdkVersion(context);
+
+
+        }else{
+            utils.showInfoLog(this,"Device not found!");
+
+        }
 
     }
 
@@ -429,7 +419,7 @@ public class Messangi implements LifecycleObserver{
                 sendEventToActivity(messangiDev,context);
             }else{
 
-                endPoint= ApiUtils.getSendMessageFCM(context);
+
                 if(messangiStorageController.isRegisterDeviceOneByOne()){
                     utils.showInfoLog(this,"Device From Service ");
                     //messangiDev= messangiStorageController.getDevice();
@@ -474,7 +464,7 @@ public class Messangi implements LifecycleObserver{
                               String model, String os, String sdkVersion,
                               final Context context){
 
-        JsonObject gsonObject = new JsonObject();
+        //JsonObject gsonObject = new JsonObject();
         final JSONObject requestBody=new JSONObject();
         try {
             requestBody.put("pushToken",pushToken);
@@ -487,8 +477,8 @@ public class Messangi implements LifecycleObserver{
             e.printStackTrace();
         }
 
-        JsonParser jsonParser=new JsonParser();
-        gsonObject=(JsonObject) jsonParser.parse(requestBody.toString());
+//        JsonParser jsonParser=new JsonParser();
+//        gsonObject=(JsonObject) jsonParser.parse(requestBody.toString());
 
         //endPoint= ApiUtils.getSendMessageFCM(context);
 //        endPoint.postDeviceParameter(gsonObject).enqueue(new Callback<MessangiDev>() {
@@ -521,7 +511,7 @@ public class Messangi implements LifecycleObserver{
 //                utils.showErrorLog(this,"onFailure Post "+t.getMessage());
 //            }
 //        });
-            new HTTPReqTaskPost(gsonObject).execute();
+            new HTTPReqTaskPost(requestBody).execute();
 
     }
 
@@ -627,8 +617,8 @@ public class Messangi implements LifecycleObserver{
     private class HTTPReqTaskPost extends AsyncTask<Void,Void,String>{
 
         private String server_response;
-        private JsonObject provRequestBody;
-        public HTTPReqTaskPost(JsonObject requestBody) {
+        private JSONObject provRequestBody;
+        public HTTPReqTaskPost(JSONObject requestBody) {
             this.provRequestBody=requestBody;
         }
 
@@ -639,7 +629,7 @@ public class Messangi implements LifecycleObserver{
 
             try {
                 String authToken= MessangiSdkUtils.getMessangi_token();
-                JsonObject postData = provRequestBody;
+                JSONObject postData = provRequestBody;
                 utils.showErrorLog(this,"JSON data Post "+postData.toString());
                 String provUrl= MessangiSdkUtils.getMessangi_host()+"/v1/devices/";
                 utils.showErrorLog(this,"Url "+provUrl);

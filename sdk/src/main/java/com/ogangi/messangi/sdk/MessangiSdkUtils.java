@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 
-import com.google.gson.Gson;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,20 +114,20 @@ public class MessangiSdkUtils {
     public static void setMessangi_token(String messangi_token) {
         MessangiSdkUtils.messangi_token = messangi_token;
     }
-    /**
-     * Method get Gson format
-     * @param object 
-     */
-    public String getGsonJsonFormat(Object object){
-        Object obj = null;
-        if(object instanceof MessangiDev){
-            obj= object;
-        }else if(object instanceof MessangiUserDevice){
-            obj= object;
-        }
-
-        return new Gson().toJson(obj);
-    }
+//    /**
+//     * Method get Gson format
+//     * @param object
+//     */
+//    public String getGsonJsonFormat(Object object){
+//        Object obj = null;
+//        if(object instanceof MessangiDev){
+//            obj= object;
+//        }else if(object instanceof MessangiUserDevice){
+//            obj= object;
+//        }
+//
+//        return new Gson().toJson(obj);
+//    }
 
     public MessangiDev getMessangiDevFromJson(JSONObject resp, MessangiDev messangiDev){
         messangiDev=new MessangiDev();

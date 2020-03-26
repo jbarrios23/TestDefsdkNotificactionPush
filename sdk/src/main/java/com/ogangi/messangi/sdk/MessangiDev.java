@@ -6,75 +6,45 @@ import android.os.AsyncTask;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 /**
  * class MessangiDev is used for handle Device paramenter in SDK and service
  */
 
 public class MessangiDev implements Serializable {
-    @SerializedName("id")
-    @Expose
     private String id;
-    @SerializedName("pushToken")
-    @Expose
     private String pushToken;
-    @SerializedName("userId")
-    @Expose
     protected String userId;
-    @SerializedName("type")
-    @Expose
     private String type;
-    @SerializedName("language")
-    @Expose
     private String language;
-    @SerializedName("model")
-    @Expose
     private String model;
-    @SerializedName("os")
-    @Expose
     private String os;
-    @SerializedName("sdkVersion")
-    @Expose
     private String sdkVersion;
-    @SerializedName("tags")
-    @Expose
     private List<String> tags = null;
-    @SerializedName("createdAt")
-    @Expose
     private String createdAt;
-    @SerializedName("updatedAt")
-    @Expose
     private String updatedAt;
-    @SerializedName("timestamp")
-    @Expose
     private String timestamp;
-    @SerializedName("transaction")
-    @Expose
     private String transaction;
 
     /**
@@ -88,10 +58,10 @@ public class MessangiDev implements Serializable {
         final Messangi messangi=Messangi.getInst(context);
         // EndPoint endPoint= ApiUtils.getSendMessageFCM(context);
         messangi.utils.showInfoLog(this," Id "+id+" pushToken "+pushToken+" "+tags.toString());
-        JsonObject gsonObject = new JsonObject();
+        //JsonObject gsonObject = new JsonObject();
         JSONObject requestUpdatebody=requestJsonBodyForUpdate(pushToken);
-        JsonParser jsonParser=new JsonParser();
-        gsonObject=(JsonObject) jsonParser.parse(requestUpdatebody.toString());
+        //JsonParser jsonParser=new JsonParser();
+        //gsonObject=(JsonObject) jsonParser.parse(requestUpdatebody.toString());
 //        endPoint.putDeviceParameter(id,gsonObject).enqueue(new Callback<MessangiDev>() {
 //                @Override
 //                public void onResponse(Call<MessangiDev> call, Response<MessangiDev> response) {
@@ -115,7 +85,7 @@ public class MessangiDev implements Serializable {
 //            });
 
 
-        new HTTPReqTaskPut(id,gsonObject,context).execute();
+        new HTTPReqTaskPut(id,requestUpdatebody,context).execute();
     }
 
     /**
@@ -131,40 +101,43 @@ public class MessangiDev implements Serializable {
             sendEventToActivity(messangi.messangiUserDevice,context);
         }else {
             if (!forsecallservice && messangiStorageController.isRegisterUserByDevice()) {
-                messangi.messangiUserDevice = messangiStorageController.getUserByDevice();
+                Map<String, String> resultMap=messangiStorageController.getUserByDeviceOneByOne();
+                messangi.messangiUserDevice=MessangiUserDevice.parseData(resultMap) ;
                 sendEventToActivity(messangi.messangiUserDevice,context);
                 messangi.utils.showInfoLog(this,"User From Local storage ");
             } else {
 
                     messangi.utils.showInfoLog(this, "User From Service ");
-                    EndPoint endPoint = ApiUtils.getSendMessageFCM(context);
-                    endPoint.getUserByDevice(id).enqueue(new Callback<Map<String, String>>() {
-                        @Override
-                        public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
-                            if (response.isSuccessful()) {
+//                    EndPoint endPoint = ApiUtils.getSendMessageFCM(context);
+//                    endPoint.getUserByDevice(id).enqueue(new Callback<Map<String, String>>() {
+//                        @Override
+//                        public void onResponse(Call<Map<String, String>> call, Response<Map<String, String>> response) {
+//                            if (response.isSuccessful()) {
+//
+//                                Map<String, String> responseBody = response.body();
+//                                MessangiUserDevice messangiUserDevice;
+//                                messangiUserDevice = MessangiUserDevice.parseData(responseBody);
+//                                messangiUserDevice.id = userId;
+//                                messangiStorageController.saveUserByDevice(messangiUserDevice);
+//                                sendEventToActivity(messangiUserDevice, context);
+//                                messangi.utils.showInfoLog(this,"Request user device successful");
+//
+//                            } else {
+//
+//                                int code = response.code();
+//                                messangi.utils.showErrorLog(this, "code getUser by device " + code);
+//                                sendEventToActivity(null, context);
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<Map<String, String>> call, Throwable t) {
+//                            messangi.utils.showErrorLog(this, "onFailure " + t.getMessage());
+//                            sendEventToActivity(null, context);
+//                        }
+//                    });
 
-                                Map<String, String> responseBody = response.body();
-                                MessangiUserDevice messangiUserDevice;
-                                messangiUserDevice = MessangiUserDevice.parseData(responseBody);
-                                messangiUserDevice.id = userId;
-                                messangiStorageController.saveUserByDevice(messangiUserDevice);
-                                sendEventToActivity(messangiUserDevice, context);
-                                messangi.utils.showInfoLog(this,"Request user device successful");
-
-                            } else {
-
-                                int code = response.code();
-                                messangi.utils.showErrorLog(this, "code getUser by device " + code);
-                                sendEventToActivity(null, context);
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Map<String, String>> call, Throwable t) {
-                            messangi.utils.showErrorLog(this, "onFailure " + t.getMessage());
-                            sendEventToActivity(null, context);
-                        }
-                    });
+                new HTTPReqTaskGetUser(id,messangi,context).execute();
             }
         }
 
@@ -447,14 +420,14 @@ public class MessangiDev implements Serializable {
 
     private class HTTPReqTaskPut extends AsyncTask<Void,Void,String> {
 
-        private JsonObject jsonObject;
+        private JSONObject jsonObject;
         private String Id;
         private Messangi messangi;
         private String server_response;
         private Context context;
         private MessangiDev messangiDev;
 
-        public HTTPReqTaskPut(String id, JsonObject gsonObject, Context context) {
+        public HTTPReqTaskPut(String id, JSONObject gsonObject, Context context) {
             this.jsonObject=gsonObject;
             this.Id=id;
             this.context=context;
@@ -468,7 +441,7 @@ public class MessangiDev implements Serializable {
 
             try {
                 String authToken= MessangiSdkUtils.getMessangi_token();
-                JsonObject postData = jsonObject;
+                JSONObject postData = jsonObject;
                 messangi.utils.showErrorLog(this,"JSON data for update "+postData.toString());
                 String provUrl= MessangiSdkUtils.getMessangi_host()+"/v1/devices/"+Id;
                 messangi.utils.showErrorLog(this,"Url "+provUrl);
@@ -533,5 +506,126 @@ public class MessangiDev implements Serializable {
                 sendEventToActivity(null,context);
             }
         }
+    }
+
+    private class HTTPReqTaskGetUser extends AsyncTask<Void,Void,String> {
+
+        public String deviceId;
+        private String server_response;
+        private Messangi messangi;
+        private Context context;
+
+        public HTTPReqTaskGetUser(String deviceId, Messangi messangi, Context context) {
+            this.deviceId=deviceId;
+            this.messangi=messangi;
+            this.context=context;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            HttpURLConnection urlConnection = null;
+
+            try {
+                String authToken= MessangiSdkUtils.getMessangi_token();
+
+                String param ="Bearer "+authToken;
+                messangi.utils.showInfoLog(this,"Auth Token "+param);
+                String provUrl= MessangiSdkUtils.getMessangi_host()+"/v1/users?device="+deviceId;
+                messangi.utils.showErrorLog(this,"Url "+provUrl);
+                URL url = new URL(provUrl);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestProperty("Authorization","Bearer "+authToken);
+                urlConnection.setRequestProperty("Content-Type","application/json");
+                urlConnection.setRequestMethod("GET");
+                int code = urlConnection.getResponseCode();
+                if (code !=  200) {
+                    throw new IOException("Invalid response from server: " + code);
+                }
+
+                BufferedReader rd = new BufferedReader(new InputStreamReader(
+                        urlConnection.getInputStream()));
+
+
+                if(code == HttpURLConnection.HTTP_OK){
+                    server_response = messangi.readStream(urlConnection.getInputStream());
+                    messangi.utils.showErrorLog(this,"response get User in"+ server_response);
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                messangi.utils.showErrorLog(this,"Service get User error "+e.getMessage());
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+
+            return server_response;
+        }
+
+        @Override
+        protected void onPostExecute(String response) {
+            super.onPostExecute(response);
+
+            try{
+                if(!response.equals("")) {
+                    messangi.utils.showInfoLog(this, "response on Get User " + response);
+                    JSONObject resp=new JSONObject(response);
+                    messangi.utils.showErrorLog(this,"Json get user "+resp.toString());
+                    Map<String, String> resultMap=toMap(resp);
+                    messangi.messangiStorageController.saveUserByDeviceOneByOne(resultMap);
+                    MessangiUserDevice messangiUserDevice;
+                    messangiUserDevice = MessangiUserDevice.parseData(resultMap);
+                    messangiUserDevice.id = userId;
+                    //messangi.messangiStorageController.saveUserByDevice(messangiUserDevice);
+
+                    sendEventToActivity(messangiUserDevice, context);
+                    messangi.utils.showInfoLog(this,"Request user device successful");
+
+                }
+            }catch (NullPointerException e){
+                messangi.utils.showErrorLog(this,"User not Get!");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    public static Map<String, String> toMap(JSONObject object) throws JSONException {
+        Map<String, String> map = new HashMap<String, String>();
+
+        Iterator<String> keysItr = object.keys();
+        while(keysItr.hasNext()) {
+            String key = keysItr.next();
+            Object value = object.get(key);
+
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+
+            map.put(key, String.valueOf(value));
+        }
+        return map;
+    }
+
+    public static List<Object> toList(JSONArray array) throws JSONException {
+        List<Object> list = new ArrayList<Object>();
+        for(int i = 0; i < array.length(); i++) {
+            Object value = array.get(i);
+            if(value instanceof JSONArray) {
+                value = toList((JSONArray) value);
+            }
+
+            else if(value instanceof JSONObject) {
+                value = toMap((JSONObject) value);
+            }
+            list.add(value);
+        }
+        return list;
     }
 }

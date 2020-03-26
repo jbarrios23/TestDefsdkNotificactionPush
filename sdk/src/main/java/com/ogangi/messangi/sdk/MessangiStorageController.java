@@ -2,17 +2,17 @@ package com.ogangi.messangi.sdk;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -82,11 +82,11 @@ public class MessangiStorageController {
      */
 
     public void saveDevice(MessangiDev value){
-        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
-        Gson gson = new Gson();
-        String jsonTags = gson.toJson(value);
-        datosuser.putString("MessangiDev",jsonTags);
-        datosuser.apply();
+//        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
+//        Gson gson = new Gson();
+//        String jsonTags = gson.toJson(value);
+//        datosuser.putString("MessangiDev",jsonTags);
+//        datosuser.apply();
         messangi.utils.showInfoLog(this,"Device Saved in Storage Controller ");
 
     }
@@ -108,15 +108,15 @@ public class MessangiStorageController {
      * Method get Device registered in local storage
      *
      */
-    public MessangiDev getDevice(){
-
-        Gson gson = new Gson();
-        String values=mSharedPreferences.getString("MessangiDev","");
-        MessangiDev messangiDev=gson.fromJson(values,MessangiDev.class);
-
-        messangi.utils.showInfoLog(this,"get Device from Local Storage ");
-        return messangiDev;
-    }
+//    public MessangiDev getDevice(){
+//
+//        Gson gson = new Gson();
+//        String values=mSharedPreferences.getString("MessangiDev","");
+//        MessangiDev messangiDev=gson.fromJson(values,MessangiDev.class);
+//
+//        messangi.utils.showInfoLog(this,"get Device from Local Storage ");
+//        return messangiDev;
+//    }
 
     public void deleteDeviceTags(){
         mSharedPreferences=contexto.getSharedPreferences("StorageCallback", 0);
@@ -129,15 +129,15 @@ public class MessangiStorageController {
      * Method save User By Device registered in local storage
      *
      */
-    public void saveUserByDevice(MessangiUserDevice value){
-        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
-        Gson gson = new Gson();
-        String jsonTags = gson.toJson(value);
-        datosuser.putString("MessangiUserDevice",jsonTags);
-        datosuser.apply();
-        messangi.utils.showInfoLog(this,"User Saved in Storage Controller ");
-
-    }
+//    public void saveUserByDevice(MessangiUserDevice value){
+//        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
+//        Gson gson = new Gson();
+//        String jsonTags = gson.toJson(value);
+//        datosuser.putString("MessangiUserDevice",jsonTags);
+//        datosuser.apply();
+//        messangi.utils.showInfoLog(this,"User Saved in Storage Controller ");
+//
+//    }
     /**
      * Method isRegisterUserByDevice lets Know if Device is registered in local storage
      *
@@ -158,14 +158,14 @@ public class MessangiStorageController {
      *
      */
 
-    public MessangiUserDevice getUserByDevice(){
-
-        Gson gson = new Gson();
-        String values=mSharedPreferences.getString("MessangiUserDevice","");
-        MessangiUserDevice messangiUserDevice=gson.fromJson(values,MessangiUserDevice.class);
-        messangi.utils.showInfoLog(this,"get User from Local Storage ");
-        return messangiUserDevice;
-    }
+//    public MessangiUserDevice getUserByDevice(){
+//
+//        Gson gson = new Gson();
+//        String values=mSharedPreferences.getString("MessangiUserDevice","");
+//        MessangiUserDevice messangiUserDevice=gson.fromJson(values,MessangiUserDevice.class);
+//        messangi.utils.showInfoLog(this,"get User from Local Storage ");
+//        return messangiUserDevice;
+//    }
 
     public void deleteUserByDevice(){
         mSharedPreferences=contexto.getSharedPreferences("StorageCallback", 0);
@@ -280,6 +280,66 @@ public class MessangiStorageController {
     }
 
     public void deleteDeviceTagsOneByOne(){
+        mSharedPreferences=contexto.getSharedPreferences("StorageCallback", 0);
+        SharedPreferences.Editor editorlogin = mSharedPreferences.edit();
+        editorlogin.clear();
+        editorlogin.commit();
+    }
+
+    /**
+     * Method save User By Device registered in local storage
+     *
+     */
+    public void saveUserByDeviceOneByOne(Map<String,String> inputMap){
+        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
+        JSONObject jsonObject = new JSONObject(inputMap);
+        String jsonString = jsonObject.toString();
+        datosuser.putString("MessangiUserDevice",jsonString);
+        datosuser.apply();
+        messangi.utils.showInfoLog(this,"User Saved in Storage Controller one by one ");
+
+    }
+    /**
+     * Method isRegisterUserByDevice lets Know if Device is registered in local storage
+     *
+     */
+    public boolean isRegisterUserByDeviceOneByOne(){
+        boolean hasToken = false;
+        String token=mSharedPreferences.getString("MessangiUserDevice","");
+        if(token.length()>0){
+            hasToken=true;
+
+        }
+        messangi.utils.showInfoLog(this,"From Local Storage isRegisterUser one by one "+hasToken);
+        return hasToken;
+    }
+
+    /**
+     * Method get User registered in local storage
+     *
+     */
+
+    public Map<String,String> getUserByDeviceOneByOne(){
+
+        Map<String,String> outputMap = new HashMap<String,String>();
+        String jsonString=mSharedPreferences.getString("MessangiUserDevice",(new JSONObject()).toString());
+        try {
+            JSONObject jsonObject = new JSONObject(jsonString);
+            Iterator<String> keysItr = jsonObject.keys();
+            while(keysItr.hasNext()) {
+                String key = keysItr.next();
+                String value = (String) jsonObject.get(key);
+                outputMap.put(key, value);
+            }
+            messangi.utils.showInfoLog(this,"get User from Local Storage ");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return outputMap;
+    }
+
+    public void deleteUserByDeviceOneByOne(){
         mSharedPreferences=contexto.getSharedPreferences("StorageCallback", 0);
         SharedPreferences.Editor editorlogin = mSharedPreferences.edit();
         editorlogin.clear();
