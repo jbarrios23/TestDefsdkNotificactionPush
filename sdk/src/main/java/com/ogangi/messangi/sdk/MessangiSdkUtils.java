@@ -129,8 +129,8 @@ public class MessangiSdkUtils {
 //        return new Gson().toJson(obj);
 //    }
 
-    public MessangiDev getMessangiDevFromJson(JSONObject resp, MessangiDev messangiDev){
-        messangiDev=new MessangiDev();
+    public MessangiDev getMessangiDevFromJson(JSONObject resp){
+        MessangiDev messangiDev=new MessangiDev();
         try {
         if(resp.has("id")){
 

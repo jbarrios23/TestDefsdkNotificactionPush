@@ -208,21 +208,21 @@ public class Messangi implements LifecycleObserver{
     }
 
 
-    public String getEmail() {
-
-        String gmail = null;
-
-        Pattern gmailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
-        Account[] accounts = AccountManager.get(context).getAccounts();
-        for (Account account : accounts) {
-            if (gmailPattern.matcher(account.name).matches()) {
-                gmail = account.name;
-            }
-        }
-        email=gmail;
-        utils.showInfoLog(this," Get Email "+ email);
-        return email;
-    }
+//    public String getEmail() {
+//
+//        String gmail = null;
+//
+//        Pattern gmailPattern = Patterns.EMAIL_ADDRESS; // API level 8+
+//        Account[] accounts = AccountManager.get(context).getAccounts();
+//        for (Account account : accounts) {
+//            if (gmailPattern.matcher(account.name).matches()) {
+//                gmail = account.name;
+//            }
+//        }
+//        email=gmail;
+//        utils.showInfoLog(this," Get Email "+ email);
+//        return email;
+//    }
 
     /**
      * Method that get Phone number of device
@@ -419,7 +419,6 @@ public class Messangi implements LifecycleObserver{
                 sendEventToActivity(messangiDev,context);
             }else{
 
-
                 if(messangiStorageController.isRegisterDeviceOneByOne()){
                     utils.showInfoLog(this,"Device From Service ");
                     //messangiDev= messangiStorageController.getDevice();
@@ -575,7 +574,7 @@ public class Messangi implements LifecycleObserver{
             if(!response.equals("")) {
                 utils.showInfoLog(this, "response on Get " + response);
                 JSONObject resp=new JSONObject(response);
-                messangiDev=utils.getMessangiDevFromJson(resp,messangiDev);
+                messangiDev=utils.getMessangiDevFromJson(resp);
                 //messangiStorageController.saveDevice(messangiDev);
                 messangiStorageController.saveDeviceOneByOne(resp);
                 sendEventToActivity(messangiDev,context);
@@ -678,8 +677,14 @@ public class Messangi implements LifecycleObserver{
                 if(!response.equals("")) {
                     JSONObject resp=new JSONObject(response);
                     utils.showInfoLog(this, "response on post create device " + resp.toString());
-                    messangiDev=utils.getMessangiDevFromJson(resp,messangiDev);
+                    messangiDev=utils.getMessangiDevFromJson(resp);
                     messangiStorageController.saveDeviceOneByOne(resp);
+                    if(messangiStorageController.hasTokenRegiter()&&
+                            !messangiStorageController.isNotificationManually()){
+                        String token= messangiStorageController.getToken();
+                        messangiDev.setPushToken(token);
+                        messangiDev.save(context);
+                    }
                     sendEventToActivity(messangiDev,context);
 
                 }

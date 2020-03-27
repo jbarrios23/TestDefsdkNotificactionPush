@@ -29,13 +29,13 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
 
     private NotificationManager notificationManager;
     private static final String ADMIN_CHANNEL_ID ="admin_channel";
-    public String body ;
-    public String title ;
-    public String icon;
-    public String nameClass;
-    public MessangiStorageController messangiStorageController;
-    public Messangi messangi;
-    public Activity activity;
+    private String body ;
+    private String title ;
+    private String icon;
+    private String nameClass;
+    private MessangiStorageController messangiStorageController;
+    private Messangi messangi;
+    private Activity activity;
 
     /**
      * In this method we receive the 'token' of the device.

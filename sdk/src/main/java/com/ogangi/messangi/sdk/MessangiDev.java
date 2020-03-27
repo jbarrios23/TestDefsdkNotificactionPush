@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 
@@ -493,7 +494,7 @@ public class MessangiDev implements Serializable {
                 if(!response.equals("")) {
                     JSONObject resp=new JSONObject(response);
                     messangi.utils.showInfoLog(this, "response on put update device " + resp.toString());
-                    messangiDev=messangi.utils.getMessangiDevFromJson(resp,messangiDev);
+                    messangiDev=messangi.utils.getMessangiDevFromJson(resp);
                     messangi.messangiStorageController.saveDeviceOneByOne(resp);
                     sendEventToActivity(messangiDev,context);
 
@@ -627,5 +628,11 @@ public class MessangiDev implements Serializable {
             list.add(value);
         }
         return list;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "device: "+id+" "+tags;
     }
 }

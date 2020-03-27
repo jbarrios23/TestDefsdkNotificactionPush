@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,14 +30,20 @@ import static com.ogangi.messangi.sdk.MessangiDev.toMap;
 public class MessangiUserDevice implements Serializable {
 
 
-    //private  ArrayList<MessangiDev> devices;
-    private  ArrayList<String> devices;
+    private  ArrayList<MessangiDev> devices;
+    //private  ArrayList<String> devices;
 
 //    @SerializedName("properties")
 //    @Expose
     private  final Map<String, String> properties = new HashMap<>();
 
     protected String id;
+
+    public MessangiUserDevice() {
+        this.devices = new ArrayList<>();
+        this.id="";
+    }
+
     /**
      * Method that make Update of User using the service Put
      @param context
@@ -53,7 +60,7 @@ public class MessangiUserDevice implements Serializable {
         Map<String, String> provPro=properties;
         JSONObject requestUpdatebody=new JSONObject(provPro);
         messangi.utils.showDebugLog(this,"requestUpdatebodyUser "+requestUpdatebody.toString());
-       // JsonParser jsonParser=new JsonParser();
+      // JsonParser jsonParser=new JsonParser();
        // gsonObject=(JsonObject) jsonParser.parse(requestUpdatebody.toString());
 //        endPoint.putUserByDeviceParameter(deviceId,gsonObject).enqueue(new Callback<JsonObject>() {
 //                @Override
@@ -97,13 +104,7 @@ public class MessangiUserDevice implements Serializable {
         return id;
     }
 
-    public ArrayList<String> getDevices() {
-        return devices;
-    }
 
-    public void setDevices(ArrayList<String> devicesAlt) {
-        this.devices = devicesAlt;
-    }
     /**
      * Method for add properties to user
      */
@@ -118,16 +119,16 @@ public class MessangiUserDevice implements Serializable {
         return properties;
     }
 
-//    /**
-//     * Method for get Device of user
-//     */
-//    public ArrayList<MessangiDev> getDevices() {
-//        return devices;
-//    }
-//
-//    public void setDevices(ArrayList<MessangiDev> devices) {
-//        this.devices = devices;
-//    }
+    /**
+     * Method for get Device of user
+     */
+    public ArrayList<MessangiDev> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(ArrayList<MessangiDev> devices) {
+        this.devices = devices;
+    }
 
     /**
      * Method that send Parameter (Ej: messangiDev or MessangiUserDevice) registered to Activity
@@ -149,7 +150,6 @@ public class MessangiUserDevice implements Serializable {
     /**
      * Method for parse data and conver to MessangiUserDevice Object
      @param retMap: HasMap Object to convert
-
      */
 
     public static MessangiUserDevice parseData(Map<String, String> retMap){
@@ -158,17 +158,20 @@ public class MessangiUserDevice implements Serializable {
 
         for (Map.Entry<String, String> entry : retMap.entrySet()) {
 
-
             if (entry.getKey().equals("devices")) {
-//                Gson gson=new Gson();
-//                //get Array list of devices from retMap
-//                ArrayList<MessangiDev> devices = gson.fromJson(
-//                        (String) retMap.get("devices"), new TypeToken<ArrayList<MessangiDev>>() {}.getType());
-                ArrayList<String> arrayList=new ArrayList<String>();
-                arrayList.add(retMap.get("devices"));
+                try {
+                    Messangi messangi=Messangi.getInst();
+                    JSONArray jsonArrayDevice=new JSONArray(retMap.get("devices"));
+                    for(int i=0;i<jsonArrayDevice.length();i++){
+                        JSONObject provDevice=jsonArrayDevice.getJSONObject(i);
+                        MessangiDev messangiDev=messangi.utils.getMessangiDevFromJson(provDevice);
+                        messangiUserDevice.devices.add(messangiDev);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
-                //messangiUserDevice.setDevices(devices);
-                messangiUserDevice.setDevices(arrayList);
+
             } else {
                 messangiUserDevice.addProperties(entry.getKey(), entry.getValue());
             }
@@ -269,6 +272,7 @@ public class MessangiUserDevice implements Serializable {
             HttpURLConnection urlConnection = null;
 
             try {
+
                 String authToken= MessangiSdkUtils.getMessangi_token();
                 JSONObject postData = jsonObject;
                 messangi.utils.showErrorLog(this,"JSON data for update "+postData.toString());
