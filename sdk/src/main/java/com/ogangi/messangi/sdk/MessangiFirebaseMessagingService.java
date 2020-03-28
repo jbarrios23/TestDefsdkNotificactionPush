@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -41,6 +42,7 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
      * In this method we receive the 'token' of the device.
      * We need it if we are going to communicate with the device directly.
      */
+
 
     @Override
     public void onNewToken(String s) {
@@ -84,45 +86,58 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
     @SuppressLint("PrivateApi")
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+        super.onMessageReceived(remoteMessage);
         // En este método recibimos el mensaje
         //verifiPermission();
         messangi = Messangi.getInst(this);
         nameClass= messangi.getNameclass();
-        try {
+        messangi.utils.showErrorLog(this,"Name class "+nameClass);
 
-            body = remoteMessage.getNotification().getBody();
+        if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
-            icon = remoteMessage.getNotification().getIcon();
-
-            messangi.utils.showDebugLog(this,"MENSAJE IN " + body);
-            messangi.utils.showDebugLog(this,"TITULO IN " + title);
-            messangi.utils.showDebugLog(this,"IMAGE IN " + title);
-
-
-        }catch (NullPointerException e){
-            messangi.utils.showErrorLog(this,"error "+e.getMessage());
-
-            body = remoteMessage.getData().get("message");
-            title = remoteMessage.getData().get("title");
-            icon = remoteMessage.getData().get("image");
+            body = remoteMessage.getNotification().getBody();
+            messangi.messangiStorageController.saveNotification(title,body);
             messangi.utils.showDebugLog(this,"MENSAJE  " + body);
             messangi.utils.showDebugLog(this,"TITULO  " + title);
-            messangi.utils.showDebugLog(this,"IMAGE  " + icon);
+
 
         }
+        if (remoteMessage.getData().size() > 0) {
+            try{
+                body = remoteMessage.getData().get("body");
+                title=remoteMessage.getData().get("title");
+                icon = remoteMessage.getData().get("image");
+                messangi.messangiStorageController.saveNotification(title,body);
+                messangi.utils.showDebugLog(this,"TITULO  " + title);
+                messangi.utils.showDebugLog(this,"MENSAJE  " + body);
+                messangi.utils.showDebugLog(this,"ICON  " + icon);
+                messangi.utils.showDebugLog(this,"action  " + remoteMessage.getData().get("click_action"));
+
+            } catch (Exception e){
+                Log.e("this", "Exception: " + e.getMessage());
+            }
+        }
+
         Intent notificationIntent=null;
 
         try {
             //action defect
+            messangi.utils.showErrorLog(this,"action defect "+messangi.identifier);
             notificationIntent = new Intent(this,Class.forName(nameClass));
+            if(messangi.identifier==1) {
+                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(notificationIntent);
+            }
 
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            messangi.utils.showErrorLog(this,"error notificationIntent "+e.getMessage());
+            notificationIntent = new Intent("com.android.testdefsdknotificactionpush.action.MainActivity");
 
         }catch (NullPointerException e){
             e.printStackTrace();
             messangi.utils.showErrorLog(this,"error notificationIntent "+e.getMessage());
-            notificationIntent = new Intent("android.intent.action.MAIN");
+            notificationIntent = new Intent("com.android.testdefsdknotificactionpush.action.MainActivity");
         }
 
         notificationIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -164,5 +179,6 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
             notificationManager.createNotificationChannel(adminChannel);
         }
     }
+
 
 }

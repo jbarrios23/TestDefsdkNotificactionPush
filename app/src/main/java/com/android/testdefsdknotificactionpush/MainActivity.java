@@ -6,6 +6,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -60,23 +61,26 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        lista_device=findViewById(R.id.lista_device);
-        lista_user=findViewById(R.id.lista_user);
-        title=findViewById(R.id.textView_imprimir);
+        Log.e(TAG, CLASS_TAG + this.getClass().getSimpleName());
+        messangi = Messangi.getInst(this);
 
-        device=findViewById(R.id.device);
-        user=findViewById(R.id.user);
-        tags=findViewById(R.id.tag);
-        save=findViewById(R.id.save);
-        progressBar=findViewById(R.id.progressBar);
+        lista_device = findViewById(R.id.lista_device);
+        lista_user = findViewById(R.id.lista_user);
+        title = findViewById(R.id.textView_imprimir);
+
+        device = findViewById(R.id.device);
+        user = findViewById(R.id.user);
+        tags = findViewById(R.id.tag);
+        save = findViewById(R.id.save);
+        progressBar = findViewById(R.id.progressBar);
         Switch simpleSwitch = findViewById(R.id.simpleSwitch);
 
-        messangi=Messangi.getInst(this);
-        messangiDevArrayList=new ArrayList<>();
-        messangiUserDeviceArrayList=new ArrayList<>();
-        messangiDevArrayAdapter=new ArrayAdapter<>(this,R.layout.item_device,R.id.Texview_value,messangiDevArrayList);
-        messangiUserDeviceArrayAdapter=new ArrayAdapter<>(this,R.layout.item_device,R.id.Texview_value,messangiUserDeviceArrayList);
-        title.setText(getResources().getString(R.string.title)+"\n"+messangi.getExternalId());
+
+        messangiDevArrayList = new ArrayList<>();
+        messangiUserDeviceArrayList = new ArrayList<>();
+        messangiDevArrayAdapter = new ArrayAdapter<>(this, R.layout.item_device, R.id.Texview_value, messangiDevArrayList);
+        messangiUserDeviceArrayAdapter = new ArrayAdapter<>(this, R.layout.item_device, R.id.Texview_value, messangiUserDeviceArrayList);
+        title.setText(getResources().getString(R.string.title) + "\n" + messangi.getExternalId());
 
         device.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,8 +89,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 messangiUserDeviceArrayList.clear();
                 progressBar.setVisibility(View.VISIBLE);
                 messangi.requestDevice(true);
-                Log.e(TAG,CLASS_TAG+": "+messangi.getExternalId());
-                messangiDev.requestUserByDevice(getApplicationContext(),true);
+                Log.e(TAG, CLASS_TAG + ": " + messangi.getExternalId());
+                messangiDev.requestUserByDevice(getApplicationContext(), true);
             }
         });
 
@@ -107,11 +111,11 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(messangiDev.getTags().size()>0) {
+                if (messangiDev.getTags().size() > 0) {
                     progressBar.setVisibility(View.VISIBLE);
                     messangiDev.save(getApplicationContext());
-                }else{
-                    Toast.makeText(getApplicationContext(),"Nothing to save",Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getApplicationContext(), "Nothing to save", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -119,15 +123,15 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         simpleSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
+                if (isChecked) {
 
-                    Toast.makeText(getApplicationContext(),"Enable Notification Push",Toast.LENGTH_LONG).show();
-                    messangiDev.setStatusNotificationPush(isChecked,getApplicationContext());
+                    Toast.makeText(getApplicationContext(), "Enable Notification Push", Toast.LENGTH_LONG).show();
+                    messangiDev.setStatusNotificationPush(isChecked, getApplicationContext());
                     progressBar.setVisibility(View.VISIBLE);
-                }else{
+                } else {
 
-                    Toast.makeText(getApplicationContext(),"Disable Notification Push",Toast.LENGTH_LONG).show();
-                    messangiDev.setStatusNotificationPush(isChecked,getApplicationContext());
+                    Toast.makeText(getApplicationContext(), "Disable Notification Push", Toast.LENGTH_LONG).show();
+                    messangiDev.setStatusNotificationPush(isChecked, getApplicationContext());
                     progressBar.setVisibility(View.VISIBLE);
                 }
             }
@@ -146,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 new IntentFilter("PassDataFromoSdk"));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
         super.onResume();
@@ -155,6 +160,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         messangiUserDeviceArrayList.clear();
         progressBar.setVisibility(View.VISIBLE);
         messangi.requestDevice(false);
+        if(messangi.messangiStorageController.hasNotification()){
+            title.setText(""+messangi.messangiStorageController.getNotificationTitle()+"\n"
+                    +messangi.messangiStorageController.getNotificationMessage());
+        }
     }
 
     private void createAlertUser() {

@@ -2,8 +2,10 @@ package com.ogangi.messangi.sdk;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,7 +24,9 @@ public class MessangiProvider extends ContentProvider {
             if(!messangi.messangiStorageController.isRegisterDeviceOneByOne()){
             messangi.utils.showInfoLog(this,"Create Device ");
             messangi.createDeviceParameters();
+
         }
+
 
         return false;
     }

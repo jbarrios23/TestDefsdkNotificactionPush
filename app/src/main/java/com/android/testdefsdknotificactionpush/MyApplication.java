@@ -8,6 +8,8 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.e(CLASS_TAG,"App created "+this.getClass().getSimpleName());
+        //Log.e(CLASS_TAG,"App created "+this.getClass().getSimpleName());
+        Log.e(CLASS_TAG,"App created ");
     }
+
 }

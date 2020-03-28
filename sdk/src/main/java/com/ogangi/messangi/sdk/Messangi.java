@@ -70,6 +70,7 @@ public class Messangi implements LifecycleObserver{
     public MessangiStorageController messangiStorageController;
     public String sdkVersion;
     public String lenguaje;
+    public int identifier;
 
 
     public Messangi(Context context){
@@ -86,6 +87,7 @@ public class Messangi implements LifecycleObserver{
         this.tags=new ArrayList<String>();
         this.messangiUserDevice=null;
         this.messangiDev=null;
+        this.identifier=0;
 
     }
 
@@ -114,6 +116,7 @@ public class Messangi implements LifecycleObserver{
             //messangiDev= messangiStorageController.getDevice();
             messangiDev= messangiStorageController.getDeviceOneByOne();
             messangiDev.checkSdkVersion(context);
+            identifier=1;
 
 
         }else{
@@ -129,6 +132,7 @@ public class Messangi implements LifecycleObserver{
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     public void onEnterBackground() {
+
         utils.showDebugLog(this,"Background");
     }
 
@@ -274,7 +278,8 @@ public class Messangi implements LifecycleObserver{
         setMessangiObserver();
         setFirebaseTopic();
         icon=context.getResources().getIdentifier("ic_launcher", "mipmap", context.getPackageName());
-        Nameclass=context.getPackageName()+"."+ context.getClass().getSimpleName();
+        //Nameclass=context.getPackageName()+"."+context.getClass().getSimpleName();
+        Nameclass=context.getPackageName()+"."+"MainActivity";
         utils.initResourcesConfigFile(context);
 
     }

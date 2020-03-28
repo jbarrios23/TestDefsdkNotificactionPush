@@ -346,4 +346,57 @@ public class MessangiStorageController {
         editorlogin.commit();
     }
 
+    /**
+     * Method save token
+     * @param title: token push of Firebase
+     */
+    public void saveNotification(String title,String message){
+        SharedPreferences.Editor datosuser=mSharedPreferences.edit();
+        datosuser.putString("title",title);
+        datosuser.putString("message",message);
+        datosuser.apply();
+        messangi.utils.showInfoLog(this,"Payload Push Saved");
+
+    }
+    /**
+     * Method hasTokenRegiter lets Know if token is registered in local storage
+     *
+     */
+    public boolean hasNotification(){
+        boolean hasToken = false;
+        String token=mSharedPreferences.getString("title","");
+        if(token.length()>0){
+            hasToken=true;
+
+        }
+        messangi.utils.showInfoLog(this,"has noti Push from storage controller "+hasToken);
+        return hasToken;
+    }
+    /**
+     * Method get token registered in local storage
+     *
+     */
+    public String getNotificationTitle(){
+        String title=mSharedPreferences.getString("title","");
+        messangi.utils.showInfoLog(this,"get title push"+title);
+        return title;
+    }
+
+    /**
+     * Method get token registered in local storage
+     *
+     */
+    public String getNotificationMessage(){
+        String title=mSharedPreferences.getString("message","");
+        messangi.utils.showInfoLog(this,"get message push"+title);
+        return title;
+    }
+
+    public void deleteNotification(){
+        mSharedPreferences=contexto.getSharedPreferences("StorageCallback", 0);
+        SharedPreferences.Editor editorlogin = mSharedPreferences.edit();
+        editorlogin.clear();
+        editorlogin.commit();
+    }
+
 }
