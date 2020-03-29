@@ -1,8 +1,6 @@
 package com.ogangi.messangi.sdk;
 
 import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -10,7 +8,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.provider.Settings;
-import android.util.Patterns;
 
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
@@ -36,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 
 
@@ -279,7 +275,15 @@ public class Messangi implements LifecycleObserver{
         setFirebaseTopic();
         icon=context.getResources().getIdentifier("ic_launcher", "mipmap", context.getPackageName());
         //Nameclass=context.getPackageName()+"."+context.getClass().getSimpleName();
-        Nameclass=context.getPackageName()+"."+"MainActivity";
+        String packageName = context.getPackageName();
+        Intent launchIntent = context.getPackageManager().getLaunchIntentForPackage(packageName);
+        if (launchIntent != null) {
+            try {
+                Nameclass = launchIntent.getComponent().getClassName();
+            }catch (NullPointerException e){
+                e.getStackTrace();
+            }
+        }
         utils.initResourcesConfigFile(context);
 
     }

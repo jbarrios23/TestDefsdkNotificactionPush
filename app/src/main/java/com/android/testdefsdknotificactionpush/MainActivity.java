@@ -54,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public ArrayAdapter<String> messangiUserDeviceArrayAdapter;
     public ProgressBar progressBar;
     public TextView title;
+    public String titleNP="";
+    public String bodyNP="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
 
         getSupportActionBar().hide();
         setContentView(R.layout.activity_main);
-        Log.e(TAG, CLASS_TAG + this.getClass().getSimpleName());
         messangi = Messangi.getInst(this);
 
         lista_device = findViewById(R.id.lista_device);
@@ -137,7 +138,23 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             }
         });
 
+        Bundle extras=getIntent().getExtras();
+        if(extras!=null){
+           for(String key:extras.keySet()){
+//                Object value = getIntent().getExtras().get(key);
+//                Log.e(TAG,CLASS_TAG+"Extras received at onCreate:  Key: " + key + " Value: " + value);
+                if(key.equals("title")){
+                    Log.e(TAG,CLASS_TAG+":Titulo "+extras.getString(key));
+                    titleNP=extras.getString(key);
 
+                }else if(key.equals("body")){
+                    Log.e(TAG,CLASS_TAG+":Mensaje "+extras.getString(key));
+                    bodyNP=extras.getString(key);
+
+                }
+            }
+            messangi.messangiStorageController.saveNotification(titleNP,bodyNP);
+        }
     }
 
 

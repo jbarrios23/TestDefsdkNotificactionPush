@@ -96,25 +96,24 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
         if (remoteMessage.getNotification() != null) {
             title = remoteMessage.getNotification().getTitle();
             body = remoteMessage.getNotification().getBody();
+            icon=remoteMessage.getNotification().getIcon();
             messangi.messangiStorageController.saveNotification(title,body);
             messangi.utils.showDebugLog(this,"MENSAJE  " + body);
             messangi.utils.showDebugLog(this,"TITULO  " + title);
-
-
-        }
-        if (remoteMessage.getData().size() > 0) {
+            messangi.utils.showDebugLog(this,"ICON  " + icon);
+        }else if(remoteMessage.getData().size() > 0){
             try{
                 body = remoteMessage.getData().get("body");
                 title=remoteMessage.getData().get("title");
-                icon = remoteMessage.getData().get("image");
+                icon = remoteMessage.getData().get("icon");
                 messangi.messangiStorageController.saveNotification(title,body);
                 messangi.utils.showDebugLog(this,"TITULO  " + title);
                 messangi.utils.showDebugLog(this,"MENSAJE  " + body);
                 messangi.utils.showDebugLog(this,"ICON  " + icon);
-                messangi.utils.showDebugLog(this,"action  " + remoteMessage.getData().get("click_action"));
 
             } catch (Exception e){
-                Log.e("this", "Exception: " + e.getMessage());
+                messangi.utils.showErrorLog(this,"Exception: " + e.getMessage());
+
             }
         }
 
@@ -125,8 +124,8 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
             messangi.utils.showErrorLog(this,"action defect "+messangi.identifier);
             notificationIntent = new Intent(this,Class.forName(nameClass));
             if(messangi.identifier==1) {
-                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(notificationIntent);
+//                notificationIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(notificationIntent);
             }
 
         } catch (ClassNotFoundException e) {
