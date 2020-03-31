@@ -109,9 +109,7 @@ public class Messangi implements LifecycleObserver{
         return mInstance;
     }
 
-    /**
-     * Method that initializes OnLifecycleEvent
-     */
+    
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     public void onEnterForeground() {
 
