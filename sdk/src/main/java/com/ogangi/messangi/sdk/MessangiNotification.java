@@ -134,7 +134,7 @@ public class MessangiNotification implements Serializable {
      */
     private void sendEventToActivity(Serializable something, Context context) {
         Messangi messangi=Messangi.getInst();
-        Intent intent=new Intent("PassDataFromoSdk");
+        Intent intent=new Intent("PassDataFromSdk");
         intent.putExtra("message",something);
         if(something!=null){
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);

@@ -480,7 +480,7 @@ public class Messangi implements LifecycleObserver{
      @param context : context instance
      */
     private void sendEventToActivity(Serializable something, Context context) {
-        Intent intent=new Intent("PassDataFromoSdk");
+        Intent intent=new Intent("PassDataFromSdk");
         intent.putExtra("message",something);
         if(something!=null){
             LocalBroadcastManager.getInstance(context).sendBroadcast(intent);

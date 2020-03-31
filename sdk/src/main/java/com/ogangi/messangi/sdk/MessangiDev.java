@@ -409,7 +409,7 @@ public class MessangiDev implements Serializable {
      */
     private void sendEventToActivity(Serializable something, Context context) {
         Messangi messangi=Messangi.getInst(context);
-        Intent intent=new Intent("PassDataFromoSdk");
+        Intent intent=new Intent("PassDataFromSdk");
         messangi.utils.showInfoLog(this,"Broadcasting message");
         intent.putExtra("message",something);
 
