@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:ignore="ScrollViewCount"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+        <TextView
+            android:id="@+id/textView_imprimir"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="2"
+            android:gravity="center"
+            android:text="@string/title"
+            android:textSize="15sp"
+            />
+
+
+
+        <TextView
+            android:id="@+id/textView_noti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/greyColor"
+            android:gravity="center"
+            android:layout_below="@+id/textView_imprimir"
+            android:lines="2"
+            android:text="Notification"
+            android:textColor="@color/whiteColor"
+            android:textSize="18sp"
+            />
+
+        <ListView
+            android:id="@+id/list_notification_push"
+            android:layout_width="wrap_content"
+            android:layout_height="600dp"
+            android:layout_below="@+id/textView_noti"
+            tools:listitem="@layout/item_device" />
+
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true"
+            android:progress="25"
+            android:visibility="gone"
+            tools:visibility="visible"
+            android:indeterminate="true"
+            android:indeterminateTintMode="src_atop"
+            android:indeterminateTint="@color/greyColor"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/list_notification_push"
+            android:background="@color/greyColor"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/button_back"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:background="@color/greyColor"
+                android:drawableStart="@android:drawable/ic_menu_today"
+                android:drawableLeft="@android:drawable/ic_menu_today"
+                android:text="Back"
+                android:textSize="12sp"
+                android:textColor="@color/whiteColor" />
+
+
+
+            <Button
+                android:id="@+id/button_clear"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginStart="220dp"
+                android:background="@color/greyColor"
+                android:textColor="@color/whiteColor"
+                android:drawableStart="@android:drawable/ic_menu_save"
+                android:drawableLeft="@android:drawable/ic_menu_today"
+                android:text="Clear"
+                android:textSize="12sp"
+                android:layout_marginLeft="220dp" />
+
+
+        </LinearLayout>
+
+    </RelativeLayout>
+</LinearLayout>
+
+

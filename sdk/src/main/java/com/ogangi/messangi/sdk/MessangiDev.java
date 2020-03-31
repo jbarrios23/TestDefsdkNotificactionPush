@@ -412,6 +412,7 @@ public class MessangiDev implements Serializable {
         Intent intent=new Intent("PassDataFromoSdk");
         messangi.utils.showInfoLog(this,"Broadcasting message");
         intent.putExtra("message",something);
+
         if(something!=null){
          LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
         }else{

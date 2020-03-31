@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="10dp"
+    android:orientation="horizontal">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/Texview_value"
+        android:textStyle="bold"
+        android:textSize="12sp"
+        android:layout_marginStart="16dp"
+        android:text="Value"
+        android:layout_marginLeft="16dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_gravity="right"
+        android:gravity="right"
+        android:id="@+id/texview_date"
+        android:text="time and date"/>
+
+</LinearLayout>
+

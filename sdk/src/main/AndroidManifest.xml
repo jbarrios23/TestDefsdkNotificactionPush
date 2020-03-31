@@ -9,8 +9,6 @@
             android:name=".MessangiProvider"
             android:exported="false" />
 
-        
-
         <service
             android:name=".MessangiFirebaseMessagingService"
             android:permission="com.google.android.c2dm.permission.SEND">

@@ -29,12 +29,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView_imprimir"
-            android:layout_centerHorizontal="true"
             android:background="@color/greyColor"
             android:checked="true"
             android:drawableStart="@android:drawable/ic_menu_view"
             android:drawableLeft="@android:drawable/ic_menu_view"
-            android:gravity="center" />
+             />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="List"
+            android:layout_alignParentEnd="true"
+            android:textColor="@color/whiteColor"
+            android:background="@color/greyColor"
+            android:id="@+id/button_lista"
+            android:layout_below="@id/textView_imprimir"
+            android:layout_alignParentRight="true" />
+
 
         <TextView
             android:id="@+id/textView"

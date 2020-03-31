@@ -69,6 +69,13 @@ public class Messangi implements LifecycleObserver{
     public int identifier;
 
 
+    private MessangiNotification messangiNotification;
+
+
+
+    private ArrayList<MessangiNotification> messangiNotifications;
+
+
     public Messangi(Context context){
         this.context =context;
         this.utils=new MessangiSdkUtils();
@@ -84,6 +91,8 @@ public class Messangi implements LifecycleObserver{
         this.messangiUserDevice=null;
         this.messangiDev=null;
         this.identifier=0;
+        this.messangiNotifications =new ArrayList<>();
+        this.messangiNotification =null;
 
     }
 
@@ -113,13 +122,20 @@ public class Messangi implements LifecycleObserver{
             messangiDev= messangiStorageController.getDeviceOneByOne();
             messangiDev.checkSdkVersion(context);
             identifier=1;
-
-
-        }else{
+            if(!messangiStorageController.isNotificationManually() && messangiStorageController.hasTokenRegiter()
+                        && messangiDev.getPushToken().equals("")){
+                    utils.showErrorLog(this,"save device with token");
+                    messangiDev.setPushToken(messangiStorageController.getToken());
+                    messangiDev.save(context);
+            }
+            }else{
             utils.showInfoLog(this,"Device not found!");
 
         }
-
+        if(getLastMessangiNotifiction()!=null){
+        sendEventToActivity(messangiNotification,context);
+        setLastMessangiNotifiction(null);
+        }
     }
 
     /**
@@ -131,6 +147,21 @@ public class Messangi implements LifecycleObserver{
 
         utils.showDebugLog(this,"Background");
     }
+
+    public ArrayList<MessangiNotification> getMessangiNotifications() {
+
+        return messangiNotifications;
+    }
+
+    public MessangiNotification getLastMessangiNotifiction() {
+        return messangiNotification;
+    }
+
+    public void setLastMessangiNotifiction(MessangiNotification messangiNotification) {
+        utils.showDebugLog(this,"Set notification");
+        this.messangiNotification = messangiNotification;
+    }
+
 
     public ArrayList<String> getTags() {
         return tags;

@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
@@ -30,9 +29,6 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
 
     private NotificationManager notificationManager;
     private static final String ADMIN_CHANNEL_ID ="admin_channel";
-    private String body ;
-    private String title ;
-    private String icon;
     private String nameClass;
     private MessangiStorageController messangiStorageController;
     private Messangi messangi;
@@ -46,14 +42,10 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
 
     @Override
     public void onNewToken(String s) {
-
         super.onNewToken(s);
         messangi = Messangi.getInst(this);
         messangi.utils.showErrorLog(this,"New Token "+s);
         sendTokenToBackend(s);
-
-
-
 
     }
 
@@ -92,30 +84,8 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
         messangi = Messangi.getInst(this);
         nameClass= messangi.getNameclass();
         messangi.utils.showErrorLog(this,"Name class "+nameClass);
+        MessangiNotification messangiNotification =new MessangiNotification(remoteMessage,this);
 
-        if (remoteMessage.getNotification() != null) {
-            title = remoteMessage.getNotification().getTitle();
-            body = remoteMessage.getNotification().getBody();
-            icon=remoteMessage.getNotification().getIcon();
-            messangi.messangiStorageController.saveNotification(title,body);
-            messangi.utils.showDebugLog(this,"MENSAJE  " + body);
-            messangi.utils.showDebugLog(this,"TITULO  " + title);
-            messangi.utils.showDebugLog(this,"ICON  " + icon);
-        }else if(remoteMessage.getData().size() > 0){
-            try{
-                body = remoteMessage.getData().get("body");
-                title=remoteMessage.getData().get("title");
-                icon = remoteMessage.getData().get("icon");
-                messangi.messangiStorageController.saveNotification(title,body);
-                messangi.utils.showDebugLog(this,"TITULO  " + title);
-                messangi.utils.showDebugLog(this,"MENSAJE  " + body);
-                messangi.utils.showDebugLog(this,"ICON  " + icon);
-
-            } catch (Exception e){
-                messangi.utils.showErrorLog(this,"Exception: " + e.getMessage());
-
-            }
-        }
 
         Intent notificationIntent=null;
 
@@ -152,8 +122,8 @@ public class MessangiFirebaseMessagingService extends FirebaseMessagingService  
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, ADMIN_CHANNEL_ID)
                 .setSmallIcon(messangi.getIcon())  //a resource for your custom small icon
-                .setContentTitle(title) //the "title" value you sent in your notification
-                .setContentText(body) //ditto
+                .setContentTitle(messangiNotification.getTitle()) //the "title" value you sent in your notification
+                .setContentText(messangiNotification.getBody()) //ditto
                 .setAutoCancel(true)  //dismisses the notification on click
                 .setContentIntent(pendingIntent)
                 .setSound(defaultSoundUri);

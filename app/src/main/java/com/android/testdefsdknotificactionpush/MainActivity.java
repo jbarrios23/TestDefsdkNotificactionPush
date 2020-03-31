@@ -6,15 +6,16 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,8 +29,8 @@ import android.widget.Toast;
 
 import com.ogangi.messangi.sdk.Messangi;
 import com.ogangi.messangi.sdk.MessangiDev;
+import com.ogangi.messangi.sdk.MessangiNotification;
 import com.ogangi.messangi.sdk.MessangiUserDevice;
-import com.ogangi.messangi.sdk.MessangiSdkUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,8 +55,9 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
     public ArrayAdapter<String> messangiUserDeviceArrayAdapter;
     public ProgressBar progressBar;
     public TextView title;
-    public String titleNP="";
-    public String bodyNP="";
+    public Button pressButton;
+    MessangiNotification messangiNotification;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,10 +71,20 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         lista_user = findViewById(R.id.lista_user);
         title = findViewById(R.id.textView_imprimir);
 
+        DisplayMetrics displayMetrics=new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int newHheigth=(displayMetrics.heightPixels-400)/2;//alto de la pantalla
+        ViewGroup.LayoutParams temLayout = lista_device.getLayoutParams();
+        temLayout.height=newHheigth;
+        ViewGroup.LayoutParams temLayout1 = lista_user.getLayoutParams();
+        temLayout1.height=newHheigth;
+        lista_device.setLayoutParams(temLayout);
+        lista_user.setLayoutParams(temLayout1);
         device = findViewById(R.id.device);
         user = findViewById(R.id.user);
         tags = findViewById(R.id.tag);
         save = findViewById(R.id.save);
+        pressButton=findViewById(R.id.button_lista);
         progressBar = findViewById(R.id.progressBar);
         Switch simpleSwitch = findViewById(R.id.simpleSwitch);
 
@@ -139,24 +151,21 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         });
 
         Bundle extras=getIntent().getExtras();
-        if(extras!=null){
-           for(String key:extras.keySet()){
-//                Object value = getIntent().getExtras().get(key);
-//                Log.e(TAG,CLASS_TAG+"Extras received at onCreate:  Key: " + key + " Value: " + value);
-                if(key.equals("title")){
-                    Log.e(TAG,CLASS_TAG+":Titulo "+extras.getString(key));
-                    titleNP=extras.getString(key);
+        messangiNotification =new MessangiNotification(extras,getApplicationContext());
 
-                }else if(key.equals("body")){
-                    Log.e(TAG,CLASS_TAG+":Mensaje "+extras.getString(key));
-                    bodyNP=extras.getString(key);
-
-                }
+        pressButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoListaActivity();
             }
-            messangi.messangiStorageController.saveNotification(titleNP,bodyNP);
-        }
+        });
+
     }
 
+    private void gotoListaActivity() {
+        Intent intent=new Intent(MainActivity.this,ListNotification.class);
+        startActivity(intent);
+    }
 
 
     @Override
@@ -177,10 +186,61 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         messangiUserDeviceArrayList.clear();
         progressBar.setVisibility(View.VISIBLE);
         messangi.requestDevice(false);
-        if(messangi.messangiStorageController.hasNotification()){
-            title.setText(""+messangi.messangiStorageController.getNotificationTitle()+"\n"
-                    +messangi.messangiStorageController.getNotificationMessage());
+
+//        Log.i(TAG,CLASS_TAG+": notification "+messangiNotification.getTitle());
+//        if(!messangiNotification.getTitle().equals("")){
+//            showAlertNotificaction(messangiNotification);
+//        }
+
+//        if(messangi.messangiStorageController.hasNotification()){
+//            title.setText(""+messangi.messangiStorageController.getNotificationTitle()+"\n"
+//                    +messangi.messangiStorageController.getNotificationMessage());
+//        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void showAlertNotificaction(MessangiNotification messangiNotification) {
+        // create an alert builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Notification");
+        // set the custom layout
+        final View customLayout = getLayoutInflater().inflate(R.layout.custom_notification_layout, null);
+        builder.setView(customLayout);
+        TextView title=customLayout.findViewById(R.id.title_noti);
+        TextView body=customLayout.findViewById(R.id.body_noti);
+        TextView data=customLayout.findViewById(R.id.data_noti);
+        title.setText(""+ messangiNotification.getTitle());
+        body.setText(""+ messangiNotification.getBody());
+        if(messangiNotification.getData().size()>0){
+            data.setText("data: "+ messangiNotification.getData());
+        }else{
+            data.setText("Hasn't data");
         }
+
+
+        // add a button
+        builder.setPositiveButton("Save Notification", new DialogInterface.OnClickListener() {
+            @SuppressLint("SetTextI18n")
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                // send data from the AlertDialog to the Activity
+                gotoListaActivity();
+
+
+            }
+        });
+
+        builder.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+
+            }
+        });
+        // create and show the alert dialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
     }
 
     private void createAlertUser() {
@@ -294,12 +354,12 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
         public void onReceive(Context context, Intent intent) {
 
             Serializable message=intent.getSerializableExtra("message");
-            MessangiSdkUtils messangiSdkUtils =new MessangiSdkUtils();
+
+
             if ((message instanceof MessangiDev) && (message!=null)){
                 messangiDevArrayList.clear();
 
                 messangiDev=(MessangiDev) message;
-
 
                 Log.i(TAG,CLASS_TAG+": Device:  "+ messangiDev.getId());
                 messangiDevArrayList.add("Id: "           +messangiDev.getId());
@@ -336,6 +396,10 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
                 }
 
                 lista_user.setAdapter(messangiUserDeviceArrayAdapter);
+            }else if((message instanceof MessangiNotification) && (message!=null)){
+                messangiNotification =(MessangiNotification) message;
+                showAlertNotificaction(messangiNotification);
+
             }else{
                 Log.i(TAG,CLASS_TAG+": do nothing");
                 if(progressBar.isShown()){
@@ -346,6 +410,7 @@ public class MainActivity extends AppCompatActivity implements ActivityCompat.On
             if(progressBar.isShown()){
                 progressBar.setVisibility(View.GONE);
             }
+
 
         }
 
